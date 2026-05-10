@@ -1,0 +1,24 @@
+meta {
+  name: Create Guitar Invalid Body
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/guitar
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "manufacturer": "",
+    "string_count": 0,
+    "body_material": "",
+    "manufacture_date": ""
+  }
+}

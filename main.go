@@ -11,7 +11,19 @@ import (
 )
 
 func main() {
-	dbpool, err := pgxpool.New(context.Background(), "postgres://postgres:password@localhost:5432/db")
+	cfg, err := LoadConfig()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Unable to load config: %v\n", err)
+		os.Exit(1)
+	}
+
+	err = RunMigrations(cfg.DatabaseURL)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Unable to run migrations: %v\n", err)
+		os.Exit(1)
+	}
+
+	dbpool, err := pgxpool.New(context.Background(), cfg.DatabaseURL)
 
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
@@ -25,5 +37,9 @@ func main() {
 	r := chi.NewRouter()
 	guitarHandler.RegisterRoutes(r)
 
-	http.ListenAndServe(":8080", r)
+	err = http.ListenAndServe(":"+cfg.Port, r)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Unable to start server: %v\n", err)
+		os.Exit(1)
+	}
 }
