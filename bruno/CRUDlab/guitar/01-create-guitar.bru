@@ -1,0 +1,40 @@
+meta {
+  name: Create Guitar
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/guitar
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "manufacturer": "Fender",
+    "string_count": 6,
+    "body_material": "Alder",
+    "manufacture_date": "2024-05-10"
+  }
+}
+
+script:post-response {
+  let body = res.getBody();
+
+  if (typeof body === "string") {
+    try {
+      body = JSON.parse(body);
+    } catch (e) {
+      body = null;
+    }
+  }
+
+  if (body && body.id) {
+    bru.setEnvVar("guitarId", body.id);
+  }
+}
