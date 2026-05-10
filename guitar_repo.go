@@ -3,11 +3,12 @@ package main
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type GuitarRepo interface {
-	GetGuitarByID(ctx context.Context, id string) (*Guitar, error)
+	GetGuitarByID(ctx context.Context, id uuid.UUID) (*Guitar, error)
 	CreateGuitar(ctx context.Context, guitar *Guitar) error
 }
 
@@ -19,7 +20,7 @@ func NewGuitarRepo(dbpool *pgxpool.Pool) GuitarRepo {
 	return &guitarRepo{dbpool: dbpool}
 }
 
-func (r *guitarRepo) GetGuitarByID(ctx context.Context, id string) (*Guitar, error) {
+func (r *guitarRepo) GetGuitarByID(ctx context.Context, id uuid.UUID) (*Guitar, error) {
 	query := `SELECT id, manufacturer, string_count, body_material, manufacture_date::text FROM guitar WHERE id = $1`
 	guitar := &Guitar{}
 	err := r.dbpool.QueryRow(ctx, query, id).Scan(&guitar.ID, &guitar.Manufacturer, &guitar.StringCount, &guitar.BodyMaterial, &guitar.ManufactureDate)
