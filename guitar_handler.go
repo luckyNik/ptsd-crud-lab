@@ -33,7 +33,7 @@ func (h *GuitarHandler) GetGuitarByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	guitar, err := h.repo.GetGuitarByID(r.Context(), id.String())
+	guitar, err := h.repo.GetGuitarByID(r.Context(), id)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			http.Error(w, "Guitar not found", http.StatusNotFound)
