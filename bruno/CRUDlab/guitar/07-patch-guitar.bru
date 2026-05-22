@@ -1,0 +1,21 @@
+meta {
+  name: Patch Guitar
+  type: http
+  seq: 7
+}
+
+patch {
+  url: {{baseUrl}}/guitar/{{guitarId}}
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "string_count": 12
+  }
+}
